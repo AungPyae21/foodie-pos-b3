@@ -1,0 +1,13 @@
+Add the next auths.
+
+CREATE TABLE "Menu" (
+    id serial NOT NULL,
+    name TEXT NOT NULL,
+    price Integer NOT NULL
+)
+
+CREATE TABLE "MenuCategory" (
+    id serial NOT NULL,
+    name TEXT NOT NULL,
+    price Integer NOT NULL
+)

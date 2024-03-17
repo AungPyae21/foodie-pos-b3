@@ -1,2 +1,0 @@
-in this stage,we build structure models.
-We create pages and simple route.
