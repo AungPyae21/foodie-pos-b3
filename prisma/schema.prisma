@@ -14,17 +14,109 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
+  id         Int      @id @default(autoincrement())
+  email      String   @unique
+  name       String?
+  companyId  Int
+  company    Company  @relation(fields: [companyId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  isArchived Boolean  @default(false)
 }
 
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  Int
+model Company {
+  id             Int            @id @default(autoincrement())
+  name           String
+  street         String
+  township       String
+  city           String
+  isArchived     Boolean        @default(false)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  locations      Location[]
+  menuCategories MenuCategory[]
+  User           User[]
+}
+
+model Location {
+  id         Int      @id @default(autoincrement())
+  name       String
+  street     String
+  township   String
+  city       String
+  companyId  Int
+  isArchived Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  company    Company  @relation(fields: [companyId], references: [id])
+  table      Table[]
+}
+
+model Table {
+  id         Int      @id @default(autoincrement())
+  locationId Int
+  location   Location @relation(fields: [locationId], references: [id])
+}
+
+model MenuCategory {
+  id               Int                @id @default(autoincrement())
+  name             String
+  isAvailable      Boolean           @default(true)
+  companyId        Int
+  company          Company            @relation(fields: [companyId], references: [id])
+  MenuCategoryMenu MenuCategoryMenu[]
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  isArchived       Boolean            @default(false)
+}
+
+model Menu {
+  id                Int                 @id @default(autoincrement())
+  name              String
+  price             Int                 @default(0)
+  description       String?
+  assetUrl          String?
+  isArchived        Boolean             @default(false)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  menuAddonCategory MenuAddonCategory[]
+  menuCategoryMenu  MenuCategoryMenu[]
+}
+
+model MenuCategoryMenu {
+  id             Int          @id @default(autoincrement())
+  menuId         Int
+  menu           Menu         @relation(fields: [menuId], references: [id])
+  menuCategoryId Int
+  menuCategory   MenuCategory @relation(fields: [menuCategoryId], references: [id])
+}
+
+model AddonCategory {
+  id                Int                 @id @default(autoincrement())
+  name              String
+  isRequired        Boolean             @default(true)
+  isArchived        Boolean             @default(false)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  addons            Addon[]
+  menuAddonCategory MenuAddonCategory[]
+}
+
+model MenuAddonCategory {
+  id              Int           @id @default(autoincrement())
+  menuId          Int
+  addonCategoryId Int
+  addonCategory   AddonCategory @relation(fields: [addonCategoryId], references: [id])
+  menu            Menu          @relation(fields: [menuId], references: [id])
+}
+
+model Addon {
+  id              Int           @id @default(autoincrement())
+  name            String
+  price           Int           @default(0)
+  addonCategoryId Int
+  isArchived      Boolean       @default(false)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  addonCategory   AddonCategory @relation(fields: [addonCategoryId], references: [id])
 }

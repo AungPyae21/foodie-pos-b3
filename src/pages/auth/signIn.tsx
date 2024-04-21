@@ -1,16 +1,26 @@
 import LayoutBackOffice from "@/components/LayoutBackOffice";
-import { Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { signIn } from "next-auth/react";
 
 const SignIn = () => {
   return (
     <LayoutBackOffice>
-      <Button
-        variant="contained"
-        onClick={() => signIn("google", { callbackUrl: "/backoffice" })}
+      <Box
+        sx={{
+          width: "100%",
+          height: "80vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
       >
-        sign in
-      </Button>
+        <Button
+          variant="contained"
+          onClick={() => signIn("google", { callbackUrl: "/backoffice" })}
+        >
+          sign in with google
+        </Button>
+      </Box>
     </LayoutBackOffice>
   );
 };

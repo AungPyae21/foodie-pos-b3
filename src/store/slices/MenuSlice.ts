@@ -1,14 +1,17 @@
+import { config } from "@/config";
+import { createMenuPayload, deleteMenuPayload } from "@/types/menuType";
+import { Menu } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-
+import { fstat } from "fs";
 interface BasedOption {
   OnSuccess?: (data?: any) => void;
   OnError?: (Error?: any) => void;
 }
 
-interface Menu extends BasedOption {
-  name: string;
-  price: number;
-}
+// interface Menu extends BasedOption {
+//   name: string;
+//   price: number;
+// }
 interface Props {
   menus: Menu[];
   isLoading: boolean;
@@ -23,23 +26,33 @@ const initialState: Props = {
 
 export const createMenu = createAsyncThunk(
   "Menu/createMenu",
-  async (newMenu: Menu) => {
+  async (payload: createMenuPayload) => {
     // newMenu.OnError && newMenu.OnError();
     // throw new Error("asdf");
-    const { OnSuccess, ...par } = newMenu;
-
-    const response = await fetch("http://localhost:5000/menu", {
+    const { OnSuccess } = payload;
+    const response = await fetch(`${config.backOfficeBaseUrl}menu`, {
       headers: {
         "content-type": "application/json",
       },
       method: "POST",
-      body: JSON.stringify({ ...newMenu }),
+      body: JSON.stringify({ ...payload }),
     });
-    const dataFromServer = await response.json();
-
+    const { menu, menuCategoryMenus } = await response.json();
     //ThunkAPI.dispatch(AddMenu(menus));
     OnSuccess && OnSuccess();
-    return dataFromServer;
+    return menu;
+  }
+);
+
+export const deleteMenu = createAsyncThunk(
+  "Menu/createMenu",
+  async (payload: deleteMenuPayload, thunkAPI) => {
+    const { id, OnSuccess } = payload;
+    await fetch(`${config.backOfficeBaseUrl}menu?id=${id}`, {
+      method: "DELETE",
+    });
+    thunkAPI.dispatch(RemoveMenu(id));
+    OnSuccess && OnSuccess();
   }
 );
 
@@ -49,7 +62,13 @@ export const menuSlice = createSlice({
   reducers: {
     AddMenu: (state, action: PayloadAction<Menu>) => {
       const newMenu = action.payload;
-      state.menus = [...state.menus, newMenu];
+      //@ts-ignore
+      state.menus = newMenu;
+    },
+    RemoveMenu: (state, action: PayloadAction<number>) => {
+      state.menus = state.menus.filter((menu) =>
+        menu.id === action.payload ? false : true
+      );
     },
   },
   extraReducers: (builder) => {
@@ -59,7 +78,7 @@ export const menuSlice = createSlice({
       })
       .addCase(createMenu.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.menus = action.payload;
+        state.menus = [...state.menus, action.payload];
       })
       .addCase(createMenu.rejected, (state, action) => {
         state.isLoading = false;
@@ -68,5 +87,5 @@ export const menuSlice = createSlice({
   },
 });
 
-export const { AddMenu } = menuSlice.actions;
+export const { AddMenu, RemoveMenu } = menuSlice.actions;
 export default menuSlice.reducer;

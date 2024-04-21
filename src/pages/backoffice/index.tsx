@@ -1,9 +1,10 @@
 import LayoutBackOffice from "@/components/LayoutBackOffice";
-import { Typography, Box, Button } from "@mui/material";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { Typography, Box } from "@mui/material";
+import { useSession } from "next-auth/react";
 
 const BackOffice = () => {
   const { data } = useSession();
+
   return (
     <LayoutBackOffice>
       <Box>
