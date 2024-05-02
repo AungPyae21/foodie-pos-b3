@@ -1,20 +1,34 @@
 import { configureStore } from "@reduxjs/toolkit";
-import MenuSlice from "./slices/MenuSlice";
-import MenuCategorySlice from "./slices/MenuCategorySlice";
-import userSlice from "./slices/userSlice";
+import MenuReducer from "./slices/MenuSlice";
+import MenuCategoryReducer from "./slices/MenuCategorySlice";
+import userReducer from "./slices/userSlice";
 import AppSnackBarReducer from "./slices/AppSnackBarSlice";
-import AppSlice from "./slices/AppSlice";
-import CompanySlice from "./slices/CompanySlice";
-import menuCategoryMenuSlice from "./slices/MenuCategoryMenuSlice";
+import AppReducer from "./slices/AppSlice";
+import CompanyReducer from "./slices/CompanySlice";
+import menuCategoryMenuReducer from "./slices/MenuCategoryMenuSlice";
+import locationReducer from "./slices/locationSlice";
+import DisabledLocationMenuCategoryReducer from "./slices/DisabledLocationMenuCategorySlice";
+import DisabledLocationMenuReducer from "./slices/DisabledLocationMenuSlice";
+import AddonCategoryReducer from "./slices/AddonCategorySlice";
+import MenuAddonCategoryReducer from "./slices/MenuAddonCategorySlice";
+import AddonReducer from "./slices/AddonSlice";
+import TableReducer from "./slices/TableSlice";
 
 export const store = configureStore({
   reducer: {
-    app: AppSlice,
-    menu: MenuSlice,
-    menuCategory: MenuCategorySlice,
-    menuCategoryMenu: menuCategoryMenuSlice,
-    company: CompanySlice,
-    user: userSlice,
+    app: AppReducer,
+    menu: MenuReducer,
+    menuCategory: MenuCategoryReducer,
+    menuCategoryMenu: menuCategoryMenuReducer,
+    addonCategory: AddonCategoryReducer,
+    menuAddonCategory: MenuAddonCategoryReducer,
+    addon: AddonReducer,
+    disabledLocationMenuCategory: DisabledLocationMenuCategoryReducer,
+    disabledLocationMenu: DisabledLocationMenuReducer,
+    table: TableReducer,
+    company: CompanyReducer,
+    location: locationReducer,
+    user: userReducer,
     snackBar: AppSnackBarReducer,
   },
 });

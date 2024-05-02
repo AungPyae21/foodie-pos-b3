@@ -6,11 +6,11 @@ interface Props {
   icon: ReactNode;
   title: string;
   href: string;
-  isAvailable?: boolean;
+  isDisabled?: boolean;
   subtitle?: string;
 }
 
-const ItemCard = ({ icon, title, href, subtitle, isAvailable }: Props) => {
+const ItemCard = ({ icon, title, href, subtitle, isDisabled }: Props) => {
   return (
     <Link href={href} style={{ textDecoration: "none", color: "#000000" }}>
       <Paper
@@ -24,7 +24,7 @@ const ItemCard = ({ icon, title, href, subtitle, isAvailable }: Props) => {
           justifyContent: "center",
           alignItems: "center",
           m: 2,
-          opacity: isAvailable === false ? 0.4 : 1,
+          opacity: isDisabled ? 0.4 : 1,
           cursor: "pointer",
         }}
       >

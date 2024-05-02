@@ -50,24 +50,31 @@ model Location {
   updatedAt  DateTime @updatedAt
   company    Company  @relation(fields: [companyId], references: [id])
   table      Table[]
+  DisabledLocationMenuCategory DisabledLocationMenuCategory[]
+  DisabledLocationnMenu DisabledLocationMenu[]
 }
 
 model Table {
   id         Int      @id @default(autoincrement())
+  name       String
   locationId Int
+  assetUrl   String?
+  isArchived Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
   location   Location @relation(fields: [locationId], references: [id])
 }
 
 model MenuCategory {
   id               Int                @id @default(autoincrement())
   name             String
-  isAvailable      Boolean           @default(true)
   companyId        Int
   company          Company            @relation(fields: [companyId], references: [id])
   MenuCategoryMenu MenuCategoryMenu[]
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
   isArchived       Boolean            @default(false)
+  DisabledLocationMenuCategory DisabledLocationMenuCategory[]
 }
 
 model Menu {
@@ -81,6 +88,23 @@ model Menu {
   updatedAt         DateTime            @updatedAt
   menuAddonCategory MenuAddonCategory[]
   menuCategoryMenu  MenuCategoryMenu[]
+  disabledLocationMenu DisabledLocationMenu[]
+}
+
+model DisabledLocationMenuCategory {
+  id         Int      @id @default(autoincrement())
+  locationId Int
+  location   Location @relation(fields: [locationId], references: [id])
+  menuCategoryId Int
+  menuCategory MenuCategory @relation(fields: [menuCategoryId],references: [id])
+}
+
+model DisabledLocationMenu {
+  id Int @id @default(autoincrement())
+  locationId Int
+  location Location @relation(fields: [locationId],references: [id])
+  menuId Int 
+  menu Menu @relation(fields: [menuId],references: [id])
 }
 
 model MenuCategoryMenu {
@@ -106,7 +130,7 @@ model MenuAddonCategory {
   id              Int           @id @default(autoincrement())
   menuId          Int
   addonCategoryId Int
-  addonCategory   AddonCategory @relation(fields: [addonCategoryId], references: [id])
+  addonCategory AddonCategory @relation(fields: [addonCategoryId],references: [id])
   menu            Menu          @relation(fields: [menuId], references: [id])
 }
 

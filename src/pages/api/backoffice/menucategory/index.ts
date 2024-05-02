@@ -13,11 +13,11 @@ export default async function handler(
     const isValid = name;
     if (!isValid) return res.status(400).send("Some requirments need");
     const menuCategory = await prisma.menuCategory.create({
-      data: { name, isAvailable, companyId },
+      data: { name, companyId },
     });
     return res.status(200).json({ menuCategory });
   } else if (method === "PUT") {
-    const { id, ...payload } = req.body;
+    const { id, locationId, isAvailable, ...payload } = req.body;
     const menuCategory = await prisma.menuCategory.findFirst({ where: { id } });
     if (!menuCategory) {
       return res.status(400).send("Bad Request");
@@ -26,7 +26,35 @@ export default async function handler(
       data: payload,
       where: { id },
     });
-    return res.status(200).json({ updateMenuCategory });
+    if (locationId && isAvailable !== undefined) {
+      if (isAvailable === false) {
+        await prisma.disabledLocationMenuCategory.create({
+          data: { menuCategoryId: id, locationId },
+        });
+      } else {
+        const item = await prisma.disabledLocationMenuCategory.findFirst({
+          where: { locationId, menuCategoryId: id },
+        });
+        item &&
+          (await prisma.disabledLocationMenuCategory.delete({
+            where: { id: item.id },
+          }));
+      }
+    }
+    const location = await prisma.location.findFirst({
+      where: { id: locationId },
+    });
+    const menuCategories = await prisma.menuCategory.findMany({
+      where: { companyId: location?.companyId },
+    });
+    const menuCategoryIds = menuCategories.map((item) => item.id);
+    const disabledLocationMenuCategory =
+      await prisma.disabledLocationMenuCategory.findMany({
+        where: { menuCategoryId: { in: menuCategoryIds } },
+      });
+    return res
+      .status(200)
+      .json({ updateMenuCategory, disabledLocationMenuCategory });
   } else if (method === "DELETE") {
     const menuCategoryId = Number(req.query.id);
     const exist = await prisma.menuCategory.findFirst({

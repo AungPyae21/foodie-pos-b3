@@ -43,7 +43,7 @@ const sideBarItems = [
 ];
 const SideBar = () => {
   return (
-    <Box sx={{ height: "100vh", width: 280, bgcolor: "#2D9596" }}>
+    <Box sx={{ height: "120vh", width: 280, bgcolor: "#2D9596", m: 0 }}>
       <Box sx={{ width: 250 }} role="presentation">
         <List>
           {sideBarItems.map((item) => (

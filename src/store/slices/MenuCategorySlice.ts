@@ -6,11 +6,8 @@ import {
 } from "@/types/menuCategoryType";
 import { MenuCategory } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { setDisabledLocationMenuCategory } from "./DisabledLocationMenuCategorySlice";
 
-// interface MenuCategory extends BasedOptions {
-//   name: string;
-//   isAvailable: boolean;
-// }
 interface MenuCategorySlice {
   menuCategory: MenuCategory[];
   isLoading: boolean;
@@ -59,7 +56,6 @@ export const deleteMenuCategory = createAsyncThunk(
     await fetch(`${config.backOfficeBaseUrl}menucategory?id=${id}`, {
       method: "DELETE",
     });
-
     OnSuccess && OnSuccess();
     thunkAPI.dispatch(RemoveMenuCategory(id));
   }
@@ -77,9 +73,12 @@ export const UpdateMenuCategory = createAsyncThunk(
       body: JSON.stringify(payload),
     });
     const dataFromServer = await response.json();
-    const { updateMenuCategory } = dataFromServer;
+    const { updateMenuCategory, disabledLocationMenuCategory } = dataFromServer;
     OnSuccess && OnSuccess();
     thunkAPI.dispatch(ReplaceMenuCategory(updateMenuCategory));
+    thunkAPI.dispatch(
+      setDisabledLocationMenuCategory(disabledLocationMenuCategory)
+    );
   }
 );
 

@@ -29,7 +29,7 @@ const NewMenuCategoryDialog = ({
   setNewMenuCategory,
 }: Props) => {
   const dispatch = useAppDispatch();
-  const asd = useAppSelector((state) => state.company.company?.id);
+  const companyId = useAppSelector((state) => state.company.company?.id);
   const handleclick = () => {
     const isValid = newMenuCategory.name;
     if (!isValid) return;
@@ -52,8 +52,8 @@ const NewMenuCategoryDialog = ({
     );
   };
   useEffect(() => {
-    setNewMenuCategory({ ...newMenuCategory, companyId: asd });
-  }, []);
+    setNewMenuCategory({ ...newMenuCategory, companyId });
+  }, [newMenuCategory]);
   return (
     <Box>
       <Dialog open={open} onClose={() => setOpen(false)}>

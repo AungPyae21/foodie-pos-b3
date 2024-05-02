@@ -1,12 +1,16 @@
 import DeleteDialog from "@/components/DeleteDialog";
 import LayoutBackOffice from "@/components/LayoutBackOffice";
+import MultiSelect from "@/components/MultiSelect";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { deleteMenu } from "@/store/slices/MenuSlice";
+import { showSnackbar } from "@/store/slices/AppSnackBarSlice";
+import { deleteMenu, updateMenu } from "@/store/slices/MenuSlice";
+import { updateMenuPayload } from "@/types/menuType";
 import {
   Box,
   Button,
   Checkbox,
   FormControl,
+  FormControlLabel,
   InputLabel,
   ListItemText,
   MenuItem,
@@ -20,12 +24,17 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 const MenuDetails = () => {
+  const [selected, setSelected] = useState<number[]>([]);
+  const [open, setOpen] = useState<boolean>(false);
+  const [updateData, setUpdateData] = useState<updateMenuPayload>();
   const router = useRouter();
   const dispatch = useAppDispatch();
   const menuId = Number(router.query.id);
+  const { selectedLocation } = useAppSelector((state) => state.app);
+  const { disabledLocationMenu } = useAppSelector(
+    (state) => state.disabledLocationMenu
+  );
   const { menuCategory } = useAppSelector((state) => state.menuCategory);
-  const [selected, setSelected] = useState<Number[]>([]);
-  const [open, setOpen] = useState<boolean>(false);
   const { MenuCategoryMenu } = useAppSelector(
     (state) => state.menuCategoryMenu
   );
@@ -39,15 +48,61 @@ const MenuDetails = () => {
     ) as MenuCategory;
     return current.id;
   });
+  const isAvaliable = disabledLocationMenu.find(
+    (item) => item.locationId === selectedLocation?.id && item.menuId === menuId
+  )
+    ? false
+    : true;
+
+  const handleUpdate = () => {
+    if (!updateData?.menuCategoryIds?.length) {
+      return dispatch(
+        showSnackbar({
+          type: "error",
+          message: "Please select at least one menuCategory",
+        })
+      );
+    }
+    updateData &&
+      dispatch(
+        updateMenu({
+          ...updateData,
+          OnSuccess: () =>
+            dispatch(
+              showSnackbar({
+                type: "success",
+                message: "Update Menu Category successfully",
+              })
+            ),
+        })
+      );
+    router.push("/backoffice/menu");
+  };
+
   useEffect(() => {
-    setSelected(selectedMenuCategoryId);
-  }, []);
-  if (!currentMenu)
+    if (currentMenu) {
+      setSelected(selectedMenuCategoryId);
+      setUpdateData({
+        ...currentMenu,
+        isAvaliable: isAvaliable,
+        locationId: selectedLocation?.id,
+        menuCategoryIds: selected,
+      });
+    }
+  }, [currentMenu]);
+  useEffect(() => {
+    if (updateData) {
+      setUpdateData({ ...updateData, menuCategoryIds: selected });
+    }
+  }, [selected]);
+
+  if (!updateData)
     return (
       <LayoutBackOffice>
         <Typography>Menu does not found</Typography>
       </LayoutBackOffice>
     );
+
   return (
     <LayoutBackOffice>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
@@ -65,48 +120,44 @@ const MenuDetails = () => {
         <TextField
           sx={{ mb: 2 }}
           type="text"
-          defaultValue={currentMenu.name}
+          defaultValue={updateData.name}
           label="Menu"
+          onChange={(eve) =>
+            setUpdateData({ ...updateData, name: eve.target.value })
+          }
         ></TextField>
         <TextField
           sx={{ mb: 2 }}
           label="Price"
           type="number"
-          defaultValue={currentMenu.price}
+          defaultValue={updateData.price}
+          onChange={(eve) =>
+            setUpdateData({ ...updateData, price: Number(eve.target.value) })
+          }
         ></TextField>
-        <FormControl fullWidth>
-          <InputLabel>MenuCategory</InputLabel>
-          <Select
-            input={<OutlinedInput label="MenuCategory" />}
-            value={selected}
-            multiple
-            onChange={(e) => {
-              const selected = e.target.value as Number[];
-              setSelected(selected);
-            }}
-            renderValue={() => {
-              return selected
-                .map(
-                  (item) =>
-                    menuCategory.find(
-                      (param) => param.id === item
-                    ) as MenuCategory
-                )
-                .map((item) => item.name)
-                .join(",");
-            }}
-          >
-            {menuCategory.map((item) => {
-              return (
-                <MenuItem key={item.id} value={item.id}>
-                  <Checkbox checked={selected.includes(item.id)} />
-                  <ListItemText>{item.name}</ListItemText>
-                </MenuItem>
-              );
-            })}
-          </Select>
-        </FormControl>
-        <Button sx={{ width: "fit-content", mt: 2 }} variant="contained">
+        <MultiSelect
+          title="MenuCategory"
+          selected={selected}
+          setSelected={setSelected}
+          items={menuCategory}
+        />
+
+        <FormControlLabel
+          control={
+            <Checkbox
+              defaultChecked={isAvaliable}
+              onChange={(evt, value) =>
+                setUpdateData({ ...updateData, isAvaliable: value })
+              }
+            />
+          }
+          label="isAvaliable"
+        />
+        <Button
+          onClick={handleUpdate}
+          sx={{ width: "fit-content", mt: 2 }}
+          variant="contained"
+        >
           Update
         </Button>
       </Box>

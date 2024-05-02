@@ -1,5 +1,5 @@
 import { userInfo } from "@/types/userTypes";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 interface User {
   user: userInfo[];

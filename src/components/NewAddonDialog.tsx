@@ -1,4 +1,6 @@
-import { useAppSelector } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { createAddonCategory } from "@/store/slices/AddonCategorySlice";
+import { createAddonParam } from "@/types/addon";
 import {
   Box,
   Button,
@@ -18,15 +20,43 @@ import {
   Checkbox,
 } from "@mui/material";
 import { MenuCategory } from "@prisma/client";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import SingleSelect from "./SingleSelect";
+import { createAddon } from "@/store/slices/AddonSlice";
+import { showSnackbar } from "@/store/slices/AppSnackBarSlice";
 
 interface Props {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  newAddon: createAddonParam;
+  setNewAddon: Dispatch<SetStateAction<createAddonParam>>;
 }
-const NewAddonDialog = ({ open, setOpen }: Props) => {
-  const { menuCategory } = useAppSelector((state) => state.menuCategory);
-  const [selected, setSelected] = useState<Number[]>([]);
+const NewAddonDialog = ({ open, setOpen, newAddon, setNewAddon }: Props) => {
+  const dispatch = useAppDispatch();
+  const { addonCategories } = useAppSelector((state) => state.addonCategory);
+  const [selected, setSelected] = useState<number>();
+  const handleCreate = () => {
+    dispatch(
+      createAddon({
+        ...newAddon,
+        OnSuccess: () => {
+          dispatch(
+            showSnackbar({
+              type: "success",
+              message: "Successfully Addon Created",
+            })
+          );
+          setOpen(false);
+        },
+        OnError: () => {
+          dispatch(showSnackbar({ type: "error", message: "Error Occured" }));
+        },
+      })
+    );
+  };
+  useEffect(() => {
+    setNewAddon({ ...newAddon, addonCategoryId: selected });
+  }, [selected]);
   return (
     <Box>
       <Dialog open={open} onClose={() => setOpen(false)}>
@@ -36,42 +66,22 @@ const NewAddonDialog = ({ open, setOpen }: Props) => {
             type="text"
             placeholder="Name"
             sx={{ width: "100%", mb: 2 }}
+            onChange={(e) => setNewAddon({ ...newAddon, name: e.target.value })}
           />
           <TextField
             type="number"
             label="Price"
             sx={{ width: "100%", mb: 2 }}
+            onChange={(e) =>
+              setNewAddon({ ...newAddon, price: Number(e.target.value) })
+            }
           />
-          <FormControl fullWidth>
-            <InputLabel>MenuCategory</InputLabel>
-            <Select
-              input={<OutlinedInput label="menuCategory" />}
-              multiple
-              value={selected}
-              onChange={(e) => {
-                const selected = e.target.value as number[];
-                setSelected(selected);
-              }}
-              renderValue={() => {
-                const selectedMenuCategory = selected.map((selectedId) => {
-                  return menuCategory.find(
-                    (item) => item.id == selectedId
-                  ) as MenuCategory;
-                });
-                return selectedMenuCategory.map((item) => item.name).join(",");
-              }}
-            >
-              {menuCategory.map((item) => {
-                return (
-                  <MenuItem key={item.id} value={item.id}>
-                    <Checkbox checked={selected.includes(item.id)} />
-                    <ListItem>{item.name}</ListItem>
-                    {/* <ListItemText primary={item.name} /> */}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
+          <SingleSelect
+            items={addonCategories}
+            title="Addon Category"
+            selected={selected}
+            setSelected={setSelected}
+          />
         </DialogContent>
         <DialogActions>
           <Button
@@ -84,7 +94,7 @@ const NewAddonDialog = ({ open, setOpen }: Props) => {
           <Button
             variant="contained"
             sx={{ bgcolor: "#265073", "&:hover": { bgcolor: "#236193" } }}
-            onClick={() => {}}
+            onClick={handleCreate}
           >
             create
           </Button>

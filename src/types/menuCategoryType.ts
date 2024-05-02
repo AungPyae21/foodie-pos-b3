@@ -8,8 +8,9 @@ export interface createMenuCategoryParam extends BasedOptions {
 
 export interface UpdateMenuCategoryPayload extends BasedOptions {
   id: number;
-  name: string;
-  isAvailable: boolean;
+  name?: string;
+  isAvailable?: boolean;
+  locationId?: number;
 }
 
 export interface deleteMenuCategoryPayload extends BasedOptions {

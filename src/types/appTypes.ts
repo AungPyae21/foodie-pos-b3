@@ -1,5 +1,8 @@
+import { Location } from "@prisma/client";
+
 export interface appData {
-  init: Boolean;
-  isLoading: Boolean;
+  init: boolean;
+  selectedLocation: Location | null;
+  isLoading: boolean;
   error: Error | null;
 }

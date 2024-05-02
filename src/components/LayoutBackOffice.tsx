@@ -11,14 +11,15 @@ interface Props {
   children: ReactNode;
 }
 const LayoutBackOffice = ({ children }: Props) => {
-  const { init } = useAppSelector((state) => state.app);
+  const { init, isLoading } = useAppSelector((state) => state.app);
   const { data } = useSession();
   const dispatch = useAppDispatch();
   useEffect(() => {
-    if (!init) {
+    if (init === false) {
       dispatch(fetchAppData());
     }
   }, []);
+  // if (isLoading) return null;
   return (
     <Box>
       <TopBar />

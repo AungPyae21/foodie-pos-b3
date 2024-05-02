@@ -9,6 +9,11 @@ import MenuBookIcon from "@mui/icons-material/MenuBook";
 
 const MenuCategory = () => {
   const companyId = useAppSelector((state) => state.company.company?.id);
+  const { disabledLocationMenuCategory } = useAppSelector(
+    (state) => state.disabledLocationMenuCategory
+  );
+  const { selectedLocation } = useAppSelector((state) => state.app);
+
   const menuCategory = useAppSelector(
     (state) => state.menuCategory.menuCategory
   );
@@ -40,12 +45,20 @@ const MenuCategory = () => {
       </Box>
       <Box sx={{ display: "flex", flexWrap: "wrap" }}>
         {menuCategory.map((param) => {
+          const isDisabled = disabledLocationMenuCategory.find(
+            (item) =>
+              item.menuCategoryId === param.id &&
+              item.locationId === selectedLocation?.id
+          )
+            ? true
+            : false;
           return (
             <Box key={param.id}>
               <ItemCard
                 icon={<MenuBookIcon />}
                 title={param.name}
                 href={`/backoffice/menucategory/${param.id}`}
+                isDisabled={isDisabled}
               />
             </Box>
           );

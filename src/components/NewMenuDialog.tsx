@@ -22,6 +22,7 @@ import {
 } from "@mui/material";
 import { MenuCategory } from "@prisma/client";
 import { useState } from "react";
+import MultiSelect from "./MultiSelect";
 
 interface Props {
   newMenu: createMenuPayload;
@@ -62,18 +63,17 @@ const NewMenuDialog = ({ newMenu, setNewMenu, open, setOpen }: Props) => {
           <TextField
             sx={{ width: "100%", mb: 2 }}
             type="name"
-            placeholder="Name"
+            label="Name"
             onChange={(e) => setNewMenu({ ...newMenu, name: e.target.value })}
           ></TextField>
           <TextField
             sx={{ width: "100%", mb: 2 }}
             type="number"
-            placeholder="Price"
+            label="Price"
             onChange={(e) =>
               setNewMenu({ ...newMenu, price: Number(e.target.value) })
             }
           ></TextField>
-
           <FormControl fullWidth>
             <InputLabel>Menu Category</InputLabel>
             <Select

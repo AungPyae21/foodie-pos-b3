@@ -25,24 +25,38 @@ const MenuCategoryDetails = () => {
 
   const [open, setOpen] = useState<boolean>(false);
   const [updateData, setUpdateData] = useState<UpdateMenuCategoryPayload>();
+  const { selectedLocation } = useAppSelector((state) => state.app);
   const { menuCategory } = useAppSelector((state) => state.menuCategory);
   const currentMenuCategory = menuCategory.find(
     (item) => item.id === menuCategoryId
   );
+  const { disabledLocationMenuCategory } = useAppSelector(
+    (state) => state.disabledLocationMenuCategory
+  );
+  const isAvaliable = disabledLocationMenuCategory.find(
+    (param) => param.menuCategoryId === currentMenuCategory?.id
+  )
+    ? false
+    : true;
 
-  if (currentMenuCategory) {
-    useEffect(() => {
-      setUpdateData(currentMenuCategory);
-    }, [currentMenuCategory]);
-  }
+  useEffect(() => {
+    if (currentMenuCategory) {
+      setUpdateData({
+        ...currentMenuCategory,
+        isAvailable: isAvaliable,
+        locationId: selectedLocation?.id,
+      });
+    }
+  }, [currentMenuCategory]);
 
   const handleclick = () => {
-    const shouldUpdate =
-      currentMenuCategory?.name !== updateData?.name ||
-      currentMenuCategory?.isAvailable !== updateData?.isAvailable;
-    if (!shouldUpdate) {
-      router.push("backoffice/menucategory");
-    }
+    // const shouldUpdate =
+    //   currentMenuCategory?.name !== updateData?.name ||
+    //   currentMenuCategory?.isAvailable !== updateData?.isAvailable;
+    // if (!shouldUpdate) {
+    //   console.log("does not call");
+    //   return router.push("/backoffice/menucategory");
+    // }
     updateData &&
       dispatch(
         UpdateMenuCategory({
@@ -89,7 +103,7 @@ const MenuCategoryDetails = () => {
         <FormControlLabel
           control={
             <Checkbox
-              defaultChecked={updateData.isAvailable}
+              defaultChecked={isAvaliable}
               onChange={(evt, value) =>
                 setUpdateData({ ...updateData, isAvailable: value })
               }
@@ -98,10 +112,6 @@ const MenuCategoryDetails = () => {
           label="Available"
         />
         <Button
-          //disabled //={
-          //   updateData.name === currentMenuCategory?.name &&
-          //   updateData.isAvailable === currentMenuCategory.isAvailable
-          // }
           onClick={handleclick}
           sx={{ width: "fit-content" }}
           variant="contained"

@@ -19,14 +19,16 @@ export default async function handler(
           where: { id: companyId },
         });
         const location = await prisma.location.findMany({
-          where: { companyId },
+          where: { companyId, isArchived: false },
+          orderBy: [{ id: "asc" }],
         });
         const locationIds = location.map((para) => para.id);
         const tables = await prisma.table.findMany({
-          where: { id: { in: locationIds } },
+          where: { locationId: { in: locationIds } },
         });
         const menuCategories = await prisma.menuCategory.findMany({
           where: { companyId, isArchived: false },
+          orderBy: [{ id: "asc" }],
         });
         const menuCategoriesIds = menuCategories.map((param) => param.id);
         const menuCategoryMenus = await prisma.menuCategoryMenu.findMany({
@@ -35,32 +37,50 @@ export default async function handler(
         const menuCategoryMenuIds = menuCategoryMenus.map(
           (param) => param.menuId
         );
+        const disabledLocationMenuCategory =
+          await prisma.disabledLocationMenuCategory.findMany({
+            where: { menuCategoryId: { in: menuCategoriesIds } },
+          });
         const menus = await prisma.menu.findMany({
           where: { id: { in: menuCategoryMenuIds }, isArchived: false },
+          orderBy: [{ id: "asc" }],
         });
         const menuIds = menus.map((param) => param.id);
+        const diabledLocationMenu = await prisma.disabledLocationMenu.findMany({
+          where: { menuId: { in: menuIds } },
+        });
         const menuAddonCategories = await prisma.menuAddonCategory.findMany({
           where: { menuId: { in: menuIds } },
         });
+
         const addonCategories = await prisma.addonCategory.findMany({
           where: {
             id: {
               in: menuAddonCategories.map((param) => param.addonCategoryId),
             },
+            isArchived: false,
           },
+          orderBy: [{ id: "asc" }],
         });
         const addons = await prisma.addon.findMany({
           where: {
             addonCategoryId: { in: addonCategories.map((param) => param.id) },
+            isArchived: false,
           },
+          orderBy: [{ id: "asc" }],
         });
         return res.status(200).json({
           company,
+          location,
           menuCategories,
           menuCategoryMenus,
+          menuAddonCategories,
           menus,
           addonCategories,
           addons,
+          tables,
+          diabledLocationMenu,
+          disabledLocationMenuCategory,
         });
       } else {
         const newCompany = await prisma.company.create({
@@ -86,7 +106,6 @@ export default async function handler(
         const newMenuCategory = await prisma.menuCategory.create({
           data: {
             name: "Default MenuCategory",
-            isAvailable: true,
             companyId: newCompany.id,
           },
         });
@@ -118,14 +137,21 @@ export default async function handler(
         const newMenuAddonCategory = await prisma.menuAddonCategory.create({
           data: { menuId: newMenu.id, addonCategoryId: newAddonCategory.id },
         });
+        const newTable = await prisma.table.create({
+          data: { locationId: newLocation.id },
+        });
         return res.status(200).json({
-          newCompany,
-          menuCategory: [newMenuCategory],
-          menu: [newMenu],
-          menuCategoryMenu: [newMenuCategoryMenu],
+          company: newCompany,
+          location: [newLocation],
+          menuCategories: [newMenuCategory],
+          menus: [newMenu],
+          diabledLocationMenu: [],
+          disabledLocationMenuCategory: [],
+          menuCategoryMenus: [newMenuCategoryMenu],
           menuAddonCategory: [newMenuAddonCategory],
-          addonCategory: [newAddonCategory],
-          addon: [newAddon],
+          addonCategories: [newAddonCategory],
+          addons: [newAddon],
+          tables: [newTable],
         });
       }
     }

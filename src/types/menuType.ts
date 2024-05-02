@@ -7,6 +7,12 @@ export interface createMenuPayload extends BasedOptions {
   menuCategoryIds: number[];
 }
 
+export interface updateMenuPayload extends Menu, BasedOptions {
+  locationId?: number;
+  isAvaliable?: boolean;
+  menuCategoryIds?: number[];
+}
+
 export interface deleteMenuPayload extends BasedOptions {
   id: number;
 }
