@@ -1,5 +1,4 @@
 import ItemCard from "@/components/ItemCard";
-import LayoutBackOffice from "@/components/LayoutBackOffice";
 import NewAddonDialog from "@/components/NewAddonDialog";
 import { useAppSelector } from "@/store/hooks";
 import { Box, Button } from "@mui/material";
@@ -16,7 +15,7 @@ const Addon = () => {
     addonCategoryId: undefined,
   });
   return (
-    <LayoutBackOffice>
+    <Box>
       <Box sx={{ width: "100%" }}>
         <Box
           sx={{
@@ -52,7 +51,7 @@ const Addon = () => {
         newAddon={newAddon}
         setNewAddon={setNewAddon}
       />
-    </LayoutBackOffice>
+    </Box>
   );
 };
 export default Addon;

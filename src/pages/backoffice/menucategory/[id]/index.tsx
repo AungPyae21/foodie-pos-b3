@@ -1,5 +1,4 @@
 import DeleteDialog from "@/components/DeleteDialog";
-import LayoutBackOffice from "@/components/LayoutBackOffice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { showSnackbar } from "@/store/slices/AppSnackBarSlice";
 import {
@@ -76,12 +75,12 @@ const MenuCategoryDetails = () => {
 
   if (!updateData)
     return (
-      <LayoutBackOffice>
+      <Box>
         <Typography>MenuCategory is not found</Typography>
-      </LayoutBackOffice>
+      </Box>
     );
   return (
-    <LayoutBackOffice>
+    <Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
         <Button
           variant="outlined"
@@ -129,7 +128,7 @@ const MenuCategoryDetails = () => {
           }}
         />
       </Box>
-    </LayoutBackOffice>
+    </Box>
   );
 };
 

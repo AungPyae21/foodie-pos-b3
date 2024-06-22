@@ -138,7 +138,11 @@ export default async function handler(
           data: { menuId: newMenu.id, addonCategoryId: newAddonCategory.id },
         });
         const newTable = await prisma.table.create({
-          data: { locationId: newLocation.id },
+          data: {
+            name: "default table",
+            locationId: newLocation.id,
+            assetUrl: "",
+          },
         });
         return res.status(200).json({
           company: newCompany,

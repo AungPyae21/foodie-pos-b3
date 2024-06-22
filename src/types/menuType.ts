@@ -4,6 +4,7 @@ import { BasedOptions } from "./userTypes";
 export interface createMenuPayload extends BasedOptions {
   name: string;
   price: number;
+  assetUrl?: string;
   menuCategoryIds: number[];
 }
 

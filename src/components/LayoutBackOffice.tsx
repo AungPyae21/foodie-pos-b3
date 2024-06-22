@@ -16,7 +16,7 @@ const LayoutBackOffice = ({ children }: Props) => {
   const dispatch = useAppDispatch();
   useEffect(() => {
     if (init === false) {
-      dispatch(fetchAppData());
+      dispatch(fetchAppData({}));
     }
   }, []);
   // if (isLoading) return null;

@@ -1,5 +1,4 @@
 import ItemCard from "@/components/ItemCard";
-import LayoutBackOffice from "@/components/LayoutBackOffice";
 import NewMenuCategoryDialog from "@/components/NewMenuCategoryDialog";
 import { useAppSelector } from "@/store/hooks";
 import { createMenuCategoryParam } from "@/types/menuCategoryType";
@@ -26,7 +25,7 @@ const MenuCategory = () => {
     });
 
   return (
-    <LayoutBackOffice>
+    <Box>
       <Box sx={{ width: "100%" }}>
         <Box
           sx={{
@@ -70,7 +69,7 @@ const MenuCategory = () => {
         newMenuCategory={newMenuCategory}
         setNewMenuCategory={setNewMenuCategory}
       />
-    </LayoutBackOffice>
+    </Box>
   );
 };
 export default MenuCategory;

@@ -1,5 +1,4 @@
 import DeleteDialog from "@/components/DeleteDialog";
-import LayoutBackOffice from "@/components/LayoutBackOffice";
 import SingleSelect from "@/components/SingleSelect";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { deleteAddon, updateAddon } from "@/store/slices/AddonSlice";
@@ -51,13 +50,13 @@ const addonDetails = () => {
   }, [selected]);
   if (!updateData) {
     return (
-      <LayoutBackOffice>
+      <Box>
         <Typography>Addon not found</Typography>
-      </LayoutBackOffice>
+      </Box>
     );
   }
   return (
-    <LayoutBackOffice>
+    <Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
         <Button
           variant="outlined"
@@ -124,7 +123,7 @@ const addonDetails = () => {
           router.push("/backoffice/addon");
         }}
       />
-    </LayoutBackOffice>
+    </Box>
   );
 };
 

@@ -1,5 +1,5 @@
 import DeleteDialog from "@/components/DeleteDialog";
-import LayoutBackOffice from "@/components/LayoutBackOffice";
+
 import MultiSelect from "@/components/MultiSelect";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
@@ -63,9 +63,9 @@ const LocationsDetails = () => {
   }, [selected]);
   if (!updateData)
     return (
-      <LayoutBackOffice>
+      <Box>
         <Typography>Addon Category does not found</Typography>
-      </LayoutBackOffice>
+      </Box>
     );
   const handleDelete = () => {
     dispatch(
@@ -100,7 +100,7 @@ const LocationsDetails = () => {
     router.push("/backoffice/addoncategory");
   };
   return (
-    <LayoutBackOffice>
+    <Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
         <Button
           variant="outlined"
@@ -155,7 +155,7 @@ const LocationsDetails = () => {
         title="Are you sure want to delete this menuCategory?"
         handleDelete={handleDelete}
       />
-    </LayoutBackOffice>
+    </Box>
   );
 };
 

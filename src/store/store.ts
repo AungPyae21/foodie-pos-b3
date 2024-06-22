@@ -13,6 +13,8 @@ import AddonCategoryReducer from "./slices/AddonCategorySlice";
 import MenuAddonCategoryReducer from "./slices/MenuAddonCategorySlice";
 import AddonReducer from "./slices/AddonSlice";
 import TableReducer from "./slices/TableSlice";
+import OrderReducer from "./slices/OrderSlice";
+import CartReducer from "./slices/CartSlice";
 
 export const store = configureStore({
   reducer: {
@@ -30,6 +32,8 @@ export const store = configureStore({
     location: locationReducer,
     user: userReducer,
     snackBar: AppSnackBarReducer,
+    order: OrderReducer,
+    cart: CartReducer,
   },
 });
 

@@ -7,6 +7,7 @@ import {
   Box,
   Button,
   Checkbox,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -23,6 +24,8 @@ import {
 import { MenuCategory } from "@prisma/client";
 import { useState } from "react";
 import MultiSelect from "./MultiSelect";
+import FileDrop from "./FileDrop";
+import { UploadAsset } from "@/store/slices/AppSlice";
 
 interface Props {
   newMenu: createMenuPayload;
@@ -33,26 +36,40 @@ interface Props {
 const NewMenuDialog = ({ newMenu, setNewMenu, open, setOpen }: Props) => {
   const dispatch = useAppDispatch();
   const { menuCategory } = useAppSelector((state) => state.menuCategory);
+  const [menuImage, setMenuImage] = useState<File>();
   const handleCreate = () => {
     const isValid = newMenu.name && newMenu.menuCategoryIds.length > 0;
     if (!isValid) return;
-    dispatch(
-      createMenu({
-        ...newMenu,
-        OnSuccess: () => {
-          dispatch(
-            showSnackbar({
-              type: "success",
-              message: "Successfully Menu Added",
-            })
-          );
-          setOpen(false);
-        },
-        OnError: () => {
-          dispatch(showSnackbar({ type: "error", message: "Error Occured" }));
-        },
-      })
-    );
+
+    if (menuImage) {
+      dispatch(
+        UploadAsset({
+          file: menuImage,
+          OnSuccess: (assetUrl) => {
+            newMenu.assetUrl = assetUrl;
+            dispatch(
+              createMenu({
+                ...newMenu,
+                OnSuccess: () => {
+                  dispatch(
+                    showSnackbar({
+                      type: "success",
+                      message: "Successfully Menu Added",
+                    })
+                  );
+                  setOpen(false);
+                },
+                OnError: () => {
+                  dispatch(
+                    showSnackbar({ type: "error", message: "Error Occured" })
+                  );
+                },
+              })
+            );
+          },
+        })
+      );
+    }
   };
 
   return (
@@ -74,7 +91,7 @@ const NewMenuDialog = ({ newMenu, setNewMenu, open, setOpen }: Props) => {
               setNewMenu({ ...newMenu, price: Number(e.target.value) })
             }
           ></TextField>
-          <FormControl fullWidth>
+          <FormControl fullWidth sx={{ mb: 2 }}>
             <InputLabel>Menu Category</InputLabel>
             <Select
               multiple
@@ -107,6 +124,16 @@ const NewMenuDialog = ({ newMenu, setNewMenu, open, setOpen }: Props) => {
               })}
             </Select>
           </FormControl>
+          <Box>
+            <FileDrop onDrop={(files) => setMenuImage(files[0])} />
+            {menuImage && (
+              <Chip
+                sx={{ mt: 2 }}
+                label={menuImage.name}
+                onDelete={() => setMenuImage(undefined)}
+              />
+            )}
+          </Box>
         </DialogContent>
         <DialogActions>
           <Button

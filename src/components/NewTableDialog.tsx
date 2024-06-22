@@ -1,4 +1,4 @@
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { showSnackbar } from "@/store/slices/AppSnackBarSlice";
 import { createTable } from "@/store/slices/TableSlice";
 import { createTableParam } from "@/types/table";
@@ -22,6 +22,7 @@ interface Props {
 }
 const NewTableDialog = ({ open, setOpen, newTable, setNewTable }: Props) => {
   const dispatch = useAppDispatch();
+  const locationId = useAppSelector((state) => state.app.selectedLocation?.id);
   const handleCreate = () => {
     dispatch(
       createTable({

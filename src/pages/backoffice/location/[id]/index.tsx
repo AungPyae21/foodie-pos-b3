@@ -1,5 +1,4 @@
 import DeleteDialog from "@/components/DeleteDialog";
-import LayoutBackOffice from "@/components/LayoutBackOffice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { setSelectedLocation } from "@/store/slices/AppSlice";
 import { deleteLocation, updateLocation } from "@/store/slices/locationSlice";
@@ -36,9 +35,9 @@ const LocationsDetails = () => {
 
   if (!updateData)
     return (
-      <LayoutBackOffice>
+      <Box>
         <Typography>Location does not found</Typography>
-      </LayoutBackOffice>
+      </Box>
     );
 
   const handleUpdate = () => {
@@ -47,7 +46,7 @@ const LocationsDetails = () => {
     router.push("/backoffice/location");
   };
   return (
-    <LayoutBackOffice>
+    <Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
         <Button
           variant="outlined"
@@ -104,7 +103,7 @@ const LocationsDetails = () => {
           router.push("/backoffice/location");
         }}
       />
-    </LayoutBackOffice>
+    </Box>
   );
 };
 

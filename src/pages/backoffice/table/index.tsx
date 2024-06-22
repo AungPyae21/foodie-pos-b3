@@ -1,8 +1,8 @@
 import ItemCard from "@/components/ItemCard";
-import LayoutBackOffice from "@/components/LayoutBackOffice";
+
 import NewTableDialog from "@/components/NewTableDialog";
 import { useAppSelector } from "@/store/hooks";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useState } from "react";
 import TableBarIcon from "@mui/icons-material/TableBar";
 import { createTableParam } from "@/types/table";
@@ -17,8 +17,14 @@ const Table = () => {
     name: "",
     locationId,
   });
+  const handleQRImagePrint = (assetUrl: string) => {
+    const imageWindow = window.open("");
+    imageWindow?.document.write(
+      `<html><head><title>Print Image</title></head><body style="text-align: center;"><img src="${assetUrl}" onload="window.print();window.close()" /></body></html>`
+    );
+  };
   return (
-    <LayoutBackOffice>
+    <Box>
       <Box sx={{ width: "100%" }}>
         <Box
           sx={{
@@ -37,12 +43,29 @@ const Table = () => {
         <Box sx={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
           {tables.map((table) => {
             return (
-              <ItemCard
+              <Box
                 key={table.id}
-                title={table.name}
-                icon={<TableBarIcon />}
-                href={`/backoffice/table/${table.id}`}
-              />
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <ItemCard
+                  title={table.name}
+                  icon={<TableBarIcon />}
+                  href={`/backoffice/table/${table.id}`}
+                />
+                <Button
+                  onClick={() => {
+                    handleQRImagePrint(table.assetUrl);
+                  }}
+                  sx={{ width: "fit-content" }}
+                  variant="contained"
+                >
+                  Print Qr
+                </Button>
+              </Box>
             );
           })}
         </Box>
@@ -53,7 +76,7 @@ const Table = () => {
         newTable={newTable}
         setNewTable={setNewTable}
       />
-    </LayoutBackOffice>
+    </Box>
   );
 };
 export default Table;

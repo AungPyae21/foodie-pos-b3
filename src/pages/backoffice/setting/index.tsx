@@ -1,11 +1,10 @@
-import LayoutBackOffice from "@/components/LayoutBackOffice";
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 const Setting = () => {
   return (
-    <LayoutBackOffice>
+    <Box>
       <Typography variant="h2">Setting</Typography>
-    </LayoutBackOffice>
+    </Box>
   );
 };
 export default Setting;

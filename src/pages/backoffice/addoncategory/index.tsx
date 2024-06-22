@@ -1,5 +1,5 @@
 import ItemCard from "@/components/ItemCard";
-import LayoutBackOffice from "@/components/LayoutBackOffice";
+
 import NewAddonCategoryDialog from "@/components/NewAddonCategoryDialog";
 import { useAppSelector } from "@/store/hooks";
 import { Box, Button, Typography } from "@mui/material";
@@ -17,7 +17,7 @@ const AddonCategory = () => {
     });
   const [open, setOpen] = useState<boolean>(false);
   return (
-    <LayoutBackOffice>
+    <Box>
       <Box
         sx={{
           display: "flex",
@@ -53,7 +53,7 @@ const AddonCategory = () => {
         open={open}
         setOpen={setOpen}
       />
-    </LayoutBackOffice>
+    </Box>
   );
 };
 export default AddonCategory;

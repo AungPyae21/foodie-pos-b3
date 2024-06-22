@@ -58,11 +58,12 @@ model Table {
   id         Int      @id @default(autoincrement())
   name       String
   locationId Int
-  assetUrl   String?
+  assetUrl   String
   isArchived Boolean  @default(false)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   location   Location @relation(fields: [locationId], references: [id])
+  order Order[]
 }
 
 model MenuCategory {
@@ -89,6 +90,7 @@ model Menu {
   menuAddonCategory MenuAddonCategory[]
   menuCategoryMenu  MenuCategoryMenu[]
   disabledLocationMenu DisabledLocationMenu[]
+  order Order[]
 }
 
 model DisabledLocationMenuCategory {
@@ -143,4 +145,28 @@ model Addon {
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
   addonCategory   AddonCategory @relation(fields: [addonCategoryId], references: [id])
+  order Order[]
+}
+
+model Order {
+  id         Int         @id @default(autoincrement())
+  menuId     Int
+  addonId    Int?
+  quantity   Int
+  orderSeq   String
+  status     ORDERSTATUS
+  totalPrice Int
+  tableId    Int
+  isArchived Boolean     @default(false)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  addon      Addon?      @relation(fields: [addonId], references: [id])
+  menu       Menu        @relation(fields: [menuId], references: [id])
+  table      Table       @relation(fields: [tableId], references: [id])
+}
+
+enum ORDERSTATUS {
+  PENDING
+  COOKING
+  COMPLETE
 }

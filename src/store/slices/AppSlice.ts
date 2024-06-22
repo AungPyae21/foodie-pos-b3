@@ -1,4 +1,4 @@
-import { appData } from "@/types/appTypes";
+import { GetAppDataOptions, UploadAssetParam, appData } from "@/types/appTypes";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AddMenu } from "./MenuSlice";
 import { SetMenucategory } from "./MenuCategorySlice";
@@ -13,6 +13,7 @@ import { setAddonCategories } from "./AddonCategorySlice";
 import { setMenuAddonCategories } from "./MenuAddonCategorySlice";
 import { setAddons } from "./AddonSlice";
 import { setTables } from "./TableSlice";
+import { RootState } from "../store";
 
 const initialState: appData = {
   init: false,
@@ -23,9 +24,13 @@ const initialState: appData = {
 
 export const fetchAppData = createAsyncThunk(
   "app/fetchAppData",
-  async (_, ThunkAPI) => {
+  async (option: GetAppDataOptions, ThunkAPI) => {
     ThunkAPI.dispatch(setIsLoading(true));
-    const response = await fetch(`${config.backOfficeBaseUrl}/app`);
+    const { tableId } = option;
+    const apiUrl = tableId
+      ? `${config.orderapiBaseUrl}app?tableId=${tableId}`
+      : `${config.backOfficeBaseUrl}app`;
+    const response = await fetch(apiUrl);
     const {
       menus,
       menuCategories,
@@ -67,6 +72,22 @@ export const fetchAppData = createAsyncThunk(
   }
 );
 
+export const UploadAsset = createAsyncThunk(
+  "app/UploadAsset",
+  async (payload: UploadAssetParam) => {
+    const { file, OnSuccess } = payload;
+    const formData = new FormData();
+    formData.append("file", file);
+    const response = await fetch(`${config.backOfficeBaseUrl}asset`, {
+      method: "POST",
+      body: formData,
+    });
+    const dataFromServer = await response.json();
+    const { assetUrl } = dataFromServer;
+    OnSuccess && OnSuccess(assetUrl);
+  }
+);
+
 export const appSlice = createSlice({
   name: "app",
   initialState,
@@ -84,4 +105,20 @@ export const appSlice = createSlice({
 });
 
 export const { setinit, setSelectedLocation, setIsLoading } = appSlice.actions;
+export const AppDataSelector = (state: RootState) => {
+  return {
+    menus: state.menu.menus,
+    menuCategories: state.menuCategory.menuCategory,
+    menuCategoryMenus: state.menuCategoryMenu.MenuCategoryMenu,
+    menuAddonCategory: state.menuAddonCategory.menuAddonCategories,
+    addonCategories: state.addonCategory.addonCategories,
+    addons: state.addon.addons,
+    company: state.company.company,
+    location: state.location.locations,
+    disabledLocationMenus: state.disabledLocationMenu.disabledLocationMenu,
+    disabledLocationMenucategories:
+      state.disabledLocationMenuCategory.disabledLocationMenuCategory,
+    selectedLocation: state.app.selectedLocation,
+  };
+};
 export default appSlice.reducer;

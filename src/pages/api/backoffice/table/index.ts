@@ -1,4 +1,5 @@
 import { prisma } from "@/utils/prisma";
+import { qrCodeUpload } from "@/utils/uploadAsset";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
@@ -14,11 +15,15 @@ export default async function handler(
     if (!isValid) {
       return res.status(400).send("Bad Requests");
     }
-    const newTable = await prisma.table.create({
+    let newTable = await prisma.table.create({
       data: { name, locationId, assetUrl: "" },
     });
+    const assetUrl = await qrCodeUpload(newTable.id);
+    newTable = await prisma.table.update({
+      where: { id: newTable.id },
+      data: { assetUrl },
+    });
     return res.status(200).json({ newTable });
-    return res.status(200).send("Ok post table");
   } else if (method === "PUT") {
     return res.status(200).send("Ok put table");
   } else if (method === "DELETE") {

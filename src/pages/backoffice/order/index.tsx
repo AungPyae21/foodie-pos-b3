@@ -1,11 +1,17 @@
-import LayoutBackOffice from "@/components/LayoutBackOffice";
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 const Order = () => {
   return (
-    <LayoutBackOffice>
+    <Box>
+      <Box
+        sx={{
+          width: 400,
+          height: 300,
+          bgcolor: { xs: "yellow", sm: "green", md: "yellowgreen" },
+        }}
+      ></Box>
       <Typography variant="h2">order</Typography>
-    </LayoutBackOffice>
+    </Box>
   );
 };
 export default Order;

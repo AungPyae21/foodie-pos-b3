@@ -1,10 +1,9 @@
-import LayoutBackOffice from "@/components/LayoutBackOffice";
 import { Box, Button } from "@mui/material";
 import { signIn } from "next-auth/react";
 
 const SignIn = () => {
   return (
-    <LayoutBackOffice>
+    <Box>
       <Box
         sx={{
           width: "100%",
@@ -21,7 +20,7 @@ const SignIn = () => {
           sign in with google
         </Button>
       </Box>
-    </LayoutBackOffice>
+    </Box>
   );
 };
 export default SignIn;

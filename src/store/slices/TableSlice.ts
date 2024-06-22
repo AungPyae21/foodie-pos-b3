@@ -2,6 +2,7 @@ import { config } from "@/config";
 import { TableSlice, createTableParam } from "@/types/table";
 import { Table } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { RootState } from "../store";
 
 const initialState: TableSlice = {
   tables: [],
@@ -40,4 +41,7 @@ export const tableSlice = createSlice({
 });
 
 export const { setTables, addTables } = tableSlice.actions;
+export const tableSelector = (state: RootState) => {
+  return state.table.tables;
+};
 export default tableSlice.reducer;

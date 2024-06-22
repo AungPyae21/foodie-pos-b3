@@ -1,14 +1,13 @@
-import ItemCard from "@/components/ItemCard";
-import LayoutBackOffice from "@/components/LayoutBackOffice";
 import NewMenuDialog from "@/components/NewMenuDialog";
 import { useAppSelector } from "@/store/hooks";
 import { createMenuPayload } from "@/types/menuType";
 import { Box, Button, Typography } from "@mui/material";
-import { useState } from "react";
-import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
+import { useEffect, useState } from "react";
+import MenuCard from "@/components/MenuCard";
+import { Menu } from "@prisma/client";
 
 const menu = () => {
-  const { menus } = useAppSelector((state) => state.menu);
+  const oldMenus = useAppSelector((state) => state.menu.menus);
   const { selectedLocation } = useAppSelector((state) => state.app);
   const [open, setOpen] = useState<boolean>(false);
   const { disabledLocationMenu } = useAppSelector(
@@ -19,8 +18,18 @@ const menu = () => {
     price: 0,
     menuCategoryIds: [],
   });
+  let menus: Menu[] = oldMenus;
+  useEffect(() => {
+    menus = oldMenus;
+  }, [oldMenus]);
+  if (!oldMenus)
+    return (
+      <Box>
+        <div>wait for the menus</div>
+      </Box>
+    );
   return (
-    <LayoutBackOffice>
+    <Box>
       <Box sx={{ width: "100%" }}>
         <Box
           sx={{
@@ -39,20 +48,19 @@ const menu = () => {
       </Box>
       <Box sx={{ display: "flex", flexWrap: "wrap" }}>
         {menus.map((item) => {
-          const isDisabled = disabledLocationMenu.find(
+          const isAvaliable = disabledLocationMenu.find(
             (param) =>
               param.locationId === selectedLocation?.id &&
               param.menuId === item.id
           )
-            ? true
-            : false;
+            ? false
+            : true;
           return (
             <Box key={item.id}>
-              <ItemCard
-                title={item.name}
-                icon={<RestaurantMenuIcon />}
+              <MenuCard
+                menu={item}
                 href={`/backoffice/menu/${item.id}`}
-                isDisabled={isDisabled}
+                isAvailable={isAvaliable}
               />
             </Box>
           );
@@ -64,7 +72,7 @@ const menu = () => {
         open={open}
         setOpen={setOpen}
       />
-    </LayoutBackOffice>
+    </Box>
   );
 };
 export default menu;

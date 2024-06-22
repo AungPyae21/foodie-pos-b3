@@ -1,5 +1,4 @@
 import ItemCard from "@/components/ItemCard";
-import LayoutBackOffice from "@/components/LayoutBackOffice";
 
 import { useAppSelector } from "@/store/hooks";
 import { Box, Button } from "@mui/material";
@@ -21,7 +20,7 @@ const Location = () => {
   const { locations } = useAppSelector((state) => state.location);
 
   return (
-    <LayoutBackOffice>
+    <Box>
       <Box sx={{ width: "100%" }}>
         <Box
           sx={{
@@ -57,7 +56,7 @@ const Location = () => {
         newLocation={newLocation}
         setNewLocation={setNewLocation}
       />
-    </LayoutBackOffice>
+    </Box>
   );
 };
 export default Location;

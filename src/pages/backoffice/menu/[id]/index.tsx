@@ -1,5 +1,4 @@
 import DeleteDialog from "@/components/DeleteDialog";
-import LayoutBackOffice from "@/components/LayoutBackOffice";
 import MultiSelect from "@/components/MultiSelect";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { showSnackbar } from "@/store/slices/AppSnackBarSlice";
@@ -98,13 +97,13 @@ const MenuDetails = () => {
 
   if (!updateData)
     return (
-      <LayoutBackOffice>
+      <Box>
         <Typography>Menu does not found</Typography>
-      </LayoutBackOffice>
+      </Box>
     );
 
   return (
-    <LayoutBackOffice>
+    <Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
         <Button
           variant="outlined"
@@ -171,7 +170,7 @@ const MenuDetails = () => {
           router.push("/backoffice/menu");
         }}
       />
-    </LayoutBackOffice>
+    </Box>
   );
 };
 
