@@ -18,7 +18,7 @@ const OrderAppHeader = () => {
 
   return (
     <Box sx={{ position: "relative" }}>
-      <Box
+      {/* <Box
         sx={{
           bgcolor: "#1B9C85",
           height: 60,
@@ -35,9 +35,9 @@ const OrderAppHeader = () => {
             fontWeight: "bold",
           }}
         >
-          {company?.name}
+          {company?.name}testtt
         </Typography>
-        {/* <Box sx={{ position: "relative" }}>
+        <Box sx={{ position: "relative" }}>
           {isCartOrActiveOrderPage ? (
             <Home
               onClick={() =>
@@ -77,8 +77,8 @@ const OrderAppHeader = () => {
               )}
             </>
           )}
-        </Box> */}
-      </Box>
+        </Box> 
+      </Box>  */}
       <Box
         sx={{
           width: "100vw",
@@ -146,7 +146,7 @@ const OrderAppHeader = () => {
           alt="header-image"
         />
         {showCompanyInfo && (
-          <Box sx={{ position: "absolute", mt: -10 }}>
+          <Box sx={{ position: "absolute", mt: 0 }}>
             <Box sx={{ textAlign: "center" }}>
               <Typography
                 sx={{

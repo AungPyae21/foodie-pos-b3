@@ -1,4 +1,9 @@
-import { GetAppDataOptions, UploadAssetParam, appData } from "@/types/appTypes";
+import {
+  GetAppDataOptions,
+  Theme,
+  UploadAssetParam,
+  appData,
+} from "@/types/appTypes";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AddMenu } from "./MenuSlice";
 import { SetMenucategory } from "./MenuCategorySlice";
@@ -14,9 +19,11 @@ import { setMenuAddonCategories } from "./MenuAddonCategorySlice";
 import { setAddons } from "./AddonSlice";
 import { setTables } from "./TableSlice";
 import { RootState } from "../store";
+import { setOrders } from "./OrderSlice";
 
 const initialState: appData = {
   init: false,
+  theme: "light",
   selectedLocation: null,
   isLoading: false,
   error: null,
@@ -42,6 +49,7 @@ export const fetchAppData = createAsyncThunk(
       menuCategoryMenus,
       diabledLocationMenu,
       tables,
+      orders,
       disabledLocationMenuCategory,
     } = await response.json();
 
@@ -52,6 +60,7 @@ export const fetchAppData = createAsyncThunk(
     ThunkAPI.dispatch(setLocations(location));
     ThunkAPI.dispatch(setAddons(addons));
     ThunkAPI.dispatch(setTables(tables));
+    ThunkAPI.dispatch(setOrders(orders));
     ThunkAPI.dispatch(setAddonCategories(addonCategories));
     ThunkAPI.dispatch(setMenuAddonCategories(menuAddonCategories));
     ThunkAPI.dispatch(setDisabledLocationMenu(diabledLocationMenu));
@@ -67,6 +76,9 @@ export const fetchAppData = createAsyncThunk(
     } else {
       ThunkAPI.dispatch(setSelectedLocation(location[0]));
     }
+    ThunkAPI.dispatch(
+      setTheme((localStorage.getItem("theme") as Theme) ?? "light")
+    );
     ThunkAPI.dispatch(setinit(true));
     ThunkAPI.dispatch(setIsLoading(false));
   }
@@ -101,18 +113,25 @@ export const appSlice = createSlice({
     setIsLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
     },
+    setTheme: (state, action: PayloadAction<Theme>) => {
+      state.theme = action.payload;
+    },
   },
 });
 
-export const { setinit, setSelectedLocation, setIsLoading } = appSlice.actions;
+export const { setinit, setSelectedLocation, setIsLoading, setTheme } =
+  appSlice.actions;
 export const AppDataSelector = (state: RootState) => {
   return {
+    app: state.app,
     menus: state.menu.menus,
     menuCategories: state.menuCategory.menuCategory,
     menuCategoryMenus: state.menuCategoryMenu.MenuCategoryMenu,
     menuAddonCategory: state.menuAddonCategory.menuAddonCategories,
     addonCategories: state.addonCategory.addonCategories,
     addons: state.addon.addons,
+    orders: state.order.items,
+    tables: state.table.tables,
     company: state.company.company,
     location: state.location.locations,
     disabledLocationMenus: state.disabledLocationMenu.disabledLocationMenu,

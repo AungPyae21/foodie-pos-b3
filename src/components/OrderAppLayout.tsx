@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { AppDataSelector, fetchAppData } from "@/store/slices/AppSlice";
+import { fetchAppData } from "@/store/slices/AppSlice";
 import { Box, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import { ReactNode, useEffect } from "react";
@@ -11,14 +11,15 @@ interface Props {
 const OrderAppLayout = ({ children }: Props) => {
   const { init } = useAppSelector((state) => state.app);
   const router = useRouter();
-  const tableId = Number(router.query);
+  const { tableId } = router.query;
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (init === false) {
-      dispatch(fetchAppData({ tableId: tableId }));
+    if (tableId && !init) {
+      dispatch(fetchAppData({ tableId: Number(tableId) }));
     }
-  }, []);
+  }, [tableId]);
   return (
     <Box>
       <OrderAppHeader />

@@ -23,11 +23,7 @@ const Addon = () => {
             justifyContent: "flex-end",
           }}
         >
-          <Button
-            variant="contained"
-            sx={{ bgcolor: "#265073", "&:hover": { bgcolor: "#236193" } }}
-            onClick={() => setOpen(true)}
-          >
+          <Button variant="contained" onClick={() => setOpen(true)}>
             New Add-on
           </Button>
         </Box>

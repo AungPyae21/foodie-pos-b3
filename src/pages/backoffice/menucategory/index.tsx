@@ -2,7 +2,7 @@ import ItemCard from "@/components/ItemCard";
 import NewMenuCategoryDialog from "@/components/NewMenuCategoryDialog";
 import { useAppSelector } from "@/store/hooks";
 import { createMenuCategoryParam } from "@/types/menuCategoryType";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useState } from "react";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 
@@ -33,11 +33,7 @@ const MenuCategory = () => {
             justifyContent: "flex-end",
           }}
         >
-          <Button
-            variant="contained"
-            sx={{ bgcolor: "#265073", "&:hover": { bgcolor: "#236193" } }}
-            onClick={() => setOpen(true)}
-          >
+          <Button variant="contained" onClick={() => setOpen(true)}>
             New Menu Category
           </Button>
         </Box>

@@ -69,6 +69,9 @@ export default async function handler(
           },
           orderBy: [{ id: "asc" }],
         });
+        const orders = await prisma.order.findMany({
+          where: { tableId: { in: tables.map((item) => item.id) } },
+        });
         return res.status(200).json({
           company,
           location,
@@ -79,6 +82,7 @@ export default async function handler(
           addonCategories,
           addons,
           tables,
+          orders,
           diabledLocationMenu,
           disabledLocationMenuCategory,
         });
@@ -156,6 +160,7 @@ export default async function handler(
           addonCategories: [newAddonCategory],
           addons: [newAddon],
           tables: [newTable],
+          orders: [],
         });
       }
     }

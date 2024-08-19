@@ -1,5 +1,6 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { removeFromCart } from "@/store/slices/CartSlice";
+import { emptyCart, removeFromCart } from "@/store/slices/CartSlice";
+import { creatOrder } from "@/store/slices/OrderSlice";
 
 import { CartItem } from "@/types/cart";
 import { getCartTotalPrice } from "@/utils/generals";
@@ -11,7 +12,6 @@ import { useRouter } from "next/router";
 
 const Cart = () => {
   const cartItems = useAppSelector((state) => state.cart.items);
-
   const router = useRouter();
   const tableId = Number(router.query.tableId);
   const dispatch = useAppDispatch();
@@ -43,22 +43,26 @@ const Cart = () => {
     dispatch(removeFromCart(cartItem));
   };
 
-  const confirmOrder = async () => {};
+  const confirmOrder = async () => {
+    const isValid = tableId;
+    if (!isValid) return alert("Need table id");
+    dispatch(
+      creatOrder({
+        tableId,
+        cartItems,
+        OnSuccess: (orders: Order[]) => {
+          dispatch(emptyCart());
+          router.push({
+            pathname: `/order/active-order/${orders[0].orderSeq}`,
+            query: { tableId },
+          });
+        },
+      })
+    );
+  };
 
   return (
-    <Box>
-      <Typography
-        color="red"
-        variant="h4"
-        sx={{
-          position: "relative",
-          top: { md: -180, lg: -240 },
-          textAlign: "center",
-          fontSize: { md: 30, lg: 40 },
-        }}
-      >
-        Review your order
-      </Typography>
+    <Box sx={{ positon: "relative" }}>
       <Box
         sx={{
           display: "flex",
@@ -78,6 +82,19 @@ const Cart = () => {
               width: { xs: "100%", md: "500px" },
             }}
           >
+            <Typography
+              color="black"
+              variant="h4"
+              sx={{
+                position: "relative",
+                top: { md: -10, lg: -20 },
+                textAlign: "center",
+                fontSize: { md: 30, lg: 40 },
+                color: "#1976D2",
+              }}
+            >
+              Review your order
+            </Typography>
             {cartItems.map((cartItem) => {
               const { menu, addons, quantity } = cartItem;
               return (

@@ -98,14 +98,14 @@ const MenuDetail = () => {
         }}
       >
         <Image
-          // menu.assetUrl ||
-          src={"/default-menu.png"}
+          // ||
+          src={menu.assetUrl || "/default-menu.png"}
           alt="menu-image"
           width={150}
           height={150}
           style={{
             borderRadius: "50%",
-            margin: "0 auto",
+            marginTop: 300,
           }}
         />
         <Box
@@ -114,7 +114,7 @@ const MenuDetail = () => {
             flexDirection: "column",
             alignItems: "center",
             width: { xs: "100%", sm: 350 },
-            mt: 30,
+            mt: 2,
             boxSizing: "border-box",
           }}
         >

@@ -11,7 +11,7 @@ interface Props {
   children: ReactNode;
 }
 const LayoutBackOffice = ({ children }: Props) => {
-  const { init, isLoading } = useAppSelector((state) => state.app);
+  const { theme, init, isLoading } = useAppSelector((state) => state.app);
   const { data } = useSession();
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -21,7 +21,7 @@ const LayoutBackOffice = ({ children }: Props) => {
   }, []);
   // if (isLoading) return null;
   return (
-    <Box>
+    <Box sx={{ bgcolor: theme === "light" ? "info.main" : "info.main" }}>
       <TopBar />
       <Box sx={{ display: "flex" }}>
         {data && <SideBar />}

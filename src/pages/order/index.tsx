@@ -51,14 +51,14 @@ const OrderApp = () => {
         position: "relative",
         maxWidth: 800,
         m: "0 auto",
-        // top: { md: -50, lg: -70, xl: -130 },
       }}
     >
       <Box
         sx={{
           position: "sticky",
-          top: 0,
+          top: 10,
           bgcolor: "",
+          mt: 10,
         }}
       >
         <Tabs

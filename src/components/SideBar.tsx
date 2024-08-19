@@ -16,6 +16,7 @@ import ClassIcon from "@mui/icons-material/Class";
 import TableBarIcon from "@mui/icons-material/TableBar";
 import MailIcon from "@mui/icons-material/Mail";
 import Link from "next/link";
+import { useAppSelector } from "@/store/hooks";
 
 const sideBarItems = [
   { id: 1, name: "Order", to: "/backoffice/order", icon: <MailIcon /> },
@@ -42,8 +43,17 @@ const sideBarItems = [
   },
 ];
 const SideBar = () => {
+  const { theme } = useAppSelector((state) => state.app);
   return (
-    <Box sx={{ height: "120vh", width: 280, bgcolor: "#2D9596", m: 0 }}>
+    <Box
+      sx={{
+        height: "120vh",
+        width: 280,
+        backgroundColor:
+          theme === "light" ? "secondary.main" : "secondary.main",
+        m: 0,
+      }}
+    >
       <Box sx={{ width: 250 }} role="presentation">
         <List>
           {sideBarItems.map((item) => (
@@ -54,10 +64,10 @@ const SideBar = () => {
             >
               <ListItem disablePadding>
                 <ListItemButton>
-                  <ListItemIcon sx={{ color: "#F1FADA" }}>
+                  <ListItemIcon sx={{ color: "#ffffff" }}>
                     {item.icon}
                   </ListItemIcon>
-                  <ListItemText sx={{ color: "#F1FADA" }} primary={item.name} />
+                  <ListItemText sx={{ color: "#ffffff" }} primary={item.name} />
                 </ListItemButton>
               </ListItem>
             </Link>

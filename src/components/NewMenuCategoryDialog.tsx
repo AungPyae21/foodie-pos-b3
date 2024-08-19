@@ -53,7 +53,7 @@ const NewMenuCategoryDialog = ({
   };
   useEffect(() => {
     setNewMenuCategory({ ...newMenuCategory, companyId });
-  }, [newMenuCategory]);
+  }, []);
   return (
     <Box>
       <Dialog open={open} onClose={() => setOpen(false)}>

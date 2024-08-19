@@ -21,7 +21,7 @@ export default async function handler(
       where: { id: location?.companyId },
     });
     let menuCategories = await prisma.menuCategory.findMany({
-      where: { companyId: company?.id },
+      where: { companyId: company?.id, isArchived: false },
     });
     const menuCategoryIds = menuCategories.map((item) => item.id);
     const disabledMenuCategoryIds = (
@@ -66,6 +66,7 @@ export default async function handler(
       },
     });
     return res.status(200).json({
+      orders: [],
       company,
       location: [location],
       menuCategories,

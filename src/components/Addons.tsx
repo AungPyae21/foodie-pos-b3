@@ -23,12 +23,14 @@ const Addons = ({
   const addonCategory = useAppSelector(
     (state) => state.addonCategory.addonCategories
   ).find((item) => item.id === addonCategoryId);
+  //1,2,3,4
   const addons = useAppSelector((state) => state.addon.addons).filter(
     (item) => item.addonCategoryId === addonCategoryId
   );
   if (!addonCategory) return null;
   return (
     <Box>
+      {/* addon 1,.....100 */}
       {addons.map((addon) => {
         return (
           <Box
@@ -44,13 +46,14 @@ const Addons = ({
                 addonCategory.isRequired ? (
                   <Radio
                     color="success"
+                    //for checked
                     checked={
                       selectedAddons.find((item) => item.id === addon.id)
                         ? true
                         : false
                     }
                     onChange={() => {
-                      //addons mean each addon
+                      //addons mean all addons in system
                       const addonIds = addons.map((item) => item.id);
                       const others = selectedAddons.filter(
                         (item) => !addonIds.includes(item.id)
