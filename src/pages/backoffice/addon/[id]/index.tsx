@@ -5,10 +5,10 @@ import { deleteAddon, updateAddon } from "@/store/slices/AddonSlice";
 import { showSnackbar } from "@/store/slices/AppSnackBarSlice";
 import { updateAddonParam } from "@/types/addon";
 import { Box, Button, TextField, Typography } from "@mui/material";
-import { Router, useRouter } from "next/router";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
-const addonDetails = () => {
+const AddonDetails = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const addonId = Number(router.query.id);
@@ -127,4 +127,4 @@ const addonDetails = () => {
   );
 };
 
-export default addonDetails;
+export default AddonDetails;

@@ -7,9 +7,7 @@ const BackOffice = () => {
   return (
     <Box>
       <Box>
-        <Typography variant="h3">
-          Backoffice App "{data?.user?.email}"
-        </Typography>
+        <Typography variant="h3">Backoffice App {data?.user?.email}</Typography>
       </Box>
     </Box>
   );

@@ -1,12 +1,12 @@
 import NewMenuDialog from "@/components/NewMenuDialog";
 import { useAppSelector } from "@/store/hooks";
 import { createMenuPayload } from "@/types/menuType";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import MenuCard from "@/components/MenuCard";
 import { Menu } from "@prisma/client";
 
-const menu = () => {
+const MenuPage = () => {
   const oldMenus = useAppSelector((state) => state.menu.menus);
   const { selectedLocation } = useAppSelector((state) => state.app);
   const [open, setOpen] = useState<boolean>(false);
@@ -71,4 +71,4 @@ const menu = () => {
     </Box>
   );
 };
-export default menu;
+export default MenuPage;
